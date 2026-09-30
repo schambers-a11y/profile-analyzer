@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Analyzer - Innovation Curriculum</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2980b9;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --gray-light: #ecf0f1;
+            --gray-dark: #2c3e50;
+            --gray-medium: #7f8c8d;
+            --blue-light: #f0f7ff;
+            --red-light: #fff0f0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            color: var(--gray-dark);
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: var(--gray-dark);
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--gray-medium);
+            margin-bottom: 35px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: var(--gray-dark);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        select, input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--gray-light);
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: 'Nunito', sans-serif;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            margin-bottom: 12px;
+        }
+
+        select:focus, input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.25);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .profile-data {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            padding: 18px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--gray-dark);
+            display: none;
+        }
+
+        .profile-data.active {
+            display: block;
+        }
+
+        .profile-data p {
+            margin-bottom: 10px;
+        }
+
+        .profile-data strong {
+            color: var(--gray-dark);
+            font-weight: 600;
+        }
+
+        .question-group {
+            margin-bottom: 22px;
+        }
+
+        .question-label {
+            color: var(--gray-dark);
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 25px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        button:hover {
+            background: var(--secondary);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .output-section {
+            display: none;
+            margin-top: 40px;
+            padding-top: 35px;
+            border-top: 2px solid var(--gray-light);
+        }
+
+        .output-section.active {
+            display: block;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-header h2 {
+            font-size: 28px;
+            color: var(--gray-dark);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .profile-header .subtext {
+            color: var(--gray-medium);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .comparison-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .comparison-card {
+            background: white;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            padding: 22px;
+        }
+
+        .comparison-card.student {
+            border-left: 5px solid var(--primary);
+            background: var(--blue-light);
+        }
+
+        .comparison-card.company {
+            border-left: 5px solid var(--danger);
+            background: var(--red-light);
+        }
+
+        .comparison-card h3 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            color: var(--gray-dark);
+            font-weight: 700;
+        }
+
+        .comparison-card p, .comparison-card li {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--gray-dark);
+            margin-bottom: 8px;
+        }
+
+        .comparison-card ul {
+            margin-left: 20px;
+            padding: 0;
+        }
+
+        .comparison-card li {
+            margin-bottom: 12px;
+        }
+
+        /* Tooltip Styles */
+        .tooltip-word {
+            position: relative;
+            cursor: help;
+            border-bottom: 2px dotted var(--primary);
+            transition: color 0.2s;
+        }
+
+        .tooltip-word:hover {
+            color: var(--primary);
+        }
+
+        .tooltip-word:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gray-dark);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
+            pointer-events: none;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .tooltip-word:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 112%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--gray-dark);
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            flex: 1;
+            padding: 14px;
+            font-size: 14px;
+        }
+
+        .button-secondary {
+            background: var(--gray-medium);
+        }
+
+        .button-secondary:hover {
+            background: #5d6d7b;
+        }
+
+        strong.highlight {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 10px;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        strong.highlight:first-child {
+            margin-top: 0;
+        }
+
+        .final-note {
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--danger);
+            font-weight: 500;
+            border-top: 2px solid var(--danger);
+            padding-top: 15px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+            .section:not(.output-section), .button-group {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px;
+            }
+            h1 {
+                font-size: 26px;
+            }
+            .comparison-section {
+                grid-template-columns: 1fr;
+            }
+            .profile-header h2 {
+                font-size: 24px;
+            }
+            .tooltip-word:hover::after {
+                white-space: normal;
+                max-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Profile Analyzer</h1>
+        <p class="subtitle">What can you infer from user data?</p>
+
+        <div class="section">
+            <label class="section-title">Step 1: Select a Profile</label>
+            <select id="profileSelect" onchange="loadProfile()">
+                <option value="">-- Choose a profile --</option>
+                <option value="maya">Maya, 14</option>
+                <option value="marcus">Marcus, 15</option>
+                <option value="jordan">Jordan, 13</option>
+                <option value="kai">Kai, 10</option>
+                <option value="sasha">Sasha, 18</option>
+                <option value="dev">Dev, 16</option>
+                <option value="riley">Riley, 17</option>
+                <option value="quinn">Quinn, 15</option>
+            </select>
+        </div>
+
+        <div class="profile-data" id="profileData"></div>
+
+        <form id="analysisForm" style="display: none;">
+            <div class="section">
+                <label class="section-title">Step 2: Analyze the Profile</label>
+
+                <div class="question-group">
+                    <label class="question-label">What is their main interest or activity?</label>
+                    <input type="text" id="mainActivity" placeholder="e.g., gaming, coding, mental health..." required>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">What 3 things can you infer about this person?</label>
+                    <textarea id="inferences" placeholder="e.g., They seem lonely, they care about..., they might be..." required></textarea>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">What companies or products would target them?</label>
+                    <input type="text" id="targeters" placeholder="e.g., fitness apps, gaming platforms, dating apps..." required>
+                </div>
+
+                <div class="question-group">
+                    <label class="question-label">Why would they be valuable to those companies?</label>
+                    <textarea id="whyValuable" placeholder="e.g., they spend lots of time, they're vulnerable to..., they buy..." required></textarea>
+                </div>
+
+                <button type="button" onclick="generateProfile()">Generate My Profile</button>
+            </div>
+        </form>
+
+        <div class="output-section" id="outputSection">
+            <div id="profileCard"></div>
+            <div class="button-group">
+                <button class="button-secondary" onclick="window.print()">Print Profile</button>
+                <button class="button-secondary" onclick="resetTool()">Analyze Another</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const profiles = {
+            maya: {
+                name: "Maya",
+                age: 14,
+                emoji: "📷",
+                activities: [
+                    "Watched 38 videos (18 makeup, 12 fitness, 5 fashion, 3 GRWM)",
+                    "Liked 31 posts",
+                    "Rewatched 6 makeup tutorials",
+                    "Searched: 'how to lose weight fast,' 'makeup for acne,' 'body confidence'",
+                    "Active: 11pm–1am, 2pm–3pm",
+                    "Total: 3 hours 47 minutes"
+                ],
+                companiesKnow: [
+                    "Specific body image anxiety (midnight scrolling = anxious state)",
+                    "Perfectionism and low self-esteem markers",
+                    "High spending likelihood on beauty/diet products",
+                    "Vulnerable to predatory weight-loss and cosmetic ads",
+                    "Risk indicators for disordered eating based on search patterns",
+                    "Valuable target: beauty industry pays premium rates for her data"
+                ]
+            },
+            marcus: {
+                name: "Marcus",
+                age: 15,
+                emoji: "🎮",
+                activities: [
+                    "Watched 52 videos (28 gaming, 15 motivational, 6 gym, 3 dating advice)",
+                    "Liked 18 posts",
+                    "Commented: 'anyone else feel this way?'",
+                    "Searched: 'how to be confident,' 'how to get muscles,' 'talk to girls'",
+                    "Active: 2am–4am, 3pm–5pm",
+                    "Total: 4 hours 12 minutes"
+                ],
+                companiesKnow: [
+                    "Social isolation and loneliness markers",
+                    "Low confidence and relationship anxiety",
+                    "Susceptible to 'self-improvement' schemes and scams",
+                    "Impulsive spender (especially on status/confidence items)",
+                    "High risk of <span class='tooltip-word' data-tooltip='Being pulled toward extreme groups'>radicalization</span> (vulnerable to extremist recruitment)",
+                    "Gaming addiction signals = high engagement and retention"
+                ]
+            },
+            jordan: {
+                name: "Jordan",
+                age: 13,
+                emoji: "🎮",
+                activities: [
+                    "Watched 87 videos (gaming, memes, trending, ADHD content)",
+                    "Liked 63 posts (scattered)",
+                    "Commented on 12 videos",
+                    "Searched: 'ADHD hacks,' 'dopamine,' 'energy'",
+                    "Active: Throughout day in short bursts",
+                    "Total: 5 hours 34 minutes"
+                ],
+                companiesKnow: [
+                    "Likely ADHD diagnosis (or undiagnosed)",
+                    "Constant <span class='tooltip-word' data-tooltip='Always looking for the feel-good chemical in your brain'>dopamine-seeking</span> behavior",
+                    "HIGHEST engagement target (5+ hours daily) = most profitable user",
+                    "Severely impaired <span class='tooltip-word' data-tooltip='Ability to stop yourself from doing something'>impulse control</span> = highest spending per user",
+                    "Vulnerable to gambling mechanics and loot boxes",
+                    "Attention span declining over time = needs increasingly stimulating content"
+                ]
+            },
+            kai: {
+                name: "Kai",
+                age: 10,
+                emoji: "🎮",
+                activities: [
+                    "Watched 31 YouTube videos (18 gaming, 8 toys, 3 viral, 2 educational)",
+                    "Played Roblox 2 hours 15 minutes",
+                    "Spent 8,500 Robux on items",
+                    "Clicked 12 ads (toys, games)",
+                    "Searched: 'free Robux,' 'Roblox hacks,' 'toy reviews'",
+                    "Active: 3pm–5pm, 7pm–8:30pm",
+                    "Total: 4 hours 22 minutes"
+                ],
+                companiesKnow: [
+                    "Child without critical media literacy skills",
+                    "Cannot distinguish ads from content",
+                    "Highly susceptible to peer pressure ('everyone has this item')",
+                    "Parents' credit card is vulnerable",
+                    "FOMO mechanics are extremely effective",
+                    "Developing spending habits early = lifetime customer value"
+                ]
+            },
+            sasha: {
+                name: "Sasha",
+                age: 18,
+                emoji: "📚",
+                activities: [
+                    "Watched 29 videos (10 college, 8 mental health, 6 adulting, 3 career, 2 dating)",
+                    "Liked 22 posts",
+                    "Commented: 'I'm so stressed,' 'does anyone feel lost?'",
+                    "Searched: 'college anxiety,' 'how to make friends,' 'therapy,' 'student loans'",
+                    "Active: 11pm–1am, between classes",
+                    "Total: 3 hours 47 minutes"
+                ],
+                companiesKnow: [
+                    "Major life transition = <span class='tooltip-word' data-tooltip='At risk / easy to influence'>vulnerable</span> to ALL targeting",
+                    "Active mental health concerns = willing to pay for 'solutions'",
+                    "Financial vulnerability (student debt coming)",
+                    "Seeking identity = susceptible to brand loyalty if 'authentic'",
+                    "Loneliness and isolation = vulnerable to predatory online communities",
+                    "High <span class='tooltip-word' data-tooltip='How much money a company expects from you over time'>lifetime value</span> young adult = targets lifetime financial habits"
+                ]
+            },
+            dev: {
+                name: "Dev",
+                age: 16,
+                emoji: "💻",
+                activities: [
+                    "Watched 18 videos (12 Python coding, 4 web dev, 2 CS career)",
+                    "Searched: 'learn Python,' 'free coding courses,' 'CS colleges'",
+                    "Clicked free resources: freeCodeCamp, Khan Academy, Code.org",
+                    "Joined coding Discord community",
+                    "Active: 6pm–8pm, 8am",
+                    "Total: 2 hours 34 minutes"
+                ],
+                companiesKnow: [
+                    "Future high-earning tech professional = high lifetime value",
+                    "Early adopter of tools and technologies",
+                    "Willing to invest in learning and upskilling",
+                    "Will eventually pay for premium tools and courses",
+                    "Connected to tech community = influence on peers",
+                    "Valuable for recruiting and sponsorship opportunities"
+                ]
+            },
+            riley: {
+                name: "Riley",
+                age: 17,
+                emoji: "🧘",
+                activities: [
+                    "Watched 12 videos (5 breathing exercises, 4 anxiety management, 2 therapy, 1 crisis)",
+                    "Searched: 'anxiety management,' 'therapy near me,' 'breathing exercises'",
+                    "Clicked: NAMI, Crisis Text Line, therapy directories",
+                    "Commented: 'thank you, this helped me'",
+                    "Active: Scattered throughout day",
+                    "Total: 1 hour 18 minutes"
+                ],
+                companiesKnow: [
+                    "Active mental health concerns = sensitive data",
+                    "Willing to pay for anxiety solutions and therapy apps",
+                    "Vulnerable to unqualified 'coaching' and 'quick fixes'",
+                    "Anxiety response patterns = predictable behavior",
+                    "Health data valuable to insurance and employers (if sold)",
+                    "High emotional attachment to app = high <span class='tooltip-word' data-tooltip='Keeping users coming back'>retention</span> and spending"
+                ]
+            },
+            quinn: {
+                name: "Quinn",
+                age: 15,
+                emoji: "📖",
+                activities: [
+                    "Watched 16 videos (10 Spanish learning, 4 immersion, 2 motivation)",
+                    "Used Duolingo 45 minutes (consistent daily)",
+                    "Searched: 'learn Spanish,' 'conversation practice,' 'study abroad'",
+                    "Joined Spanish language Discord",
+                    "Clicked free language resources",
+                    "Active: 7:30am, 4pm",
+                    "Total: 1 hour 22 minutes"
+                ],
+                companiesKnow: [
+                    "Self-improvement mindset = repeat purchaser",
+                    "Habit formation is working (Duolingo streak) = addictive design successful",
+                    "Cultural interest = susceptible to expensive study-abroad programs",
+                    "Consistent engagement pattern = predictable and reliable behavior",
+                    "Community-oriented = susceptible to values-based targeting",
+                    "Learning data valuable to educational companies and universities"
+                ]
+            }
+        };
+
+        function loadProfile() {
+            const selected = document.getElementById('profileSelect').value;
+            const profileData = document.getElementById('profileData');
+            const form = document.getElementById('analysisForm');
+            const output = document.getElementById('outputSection');
+
+            profileData.classList.remove('active');
+            form.style.display = 'none';
+            output.classList.remove('active');
+
+            if (selected && profiles[selected]) {
+                const profile = profiles[selected];
+                let html = `<strong>${profile.emoji} ${profile.name}, ${profile.age}</strong><br><br>`;
+                profile.activities.forEach(activity => {
+                    html += `<p>• ${activity}</p>`;
+                });
+                profileData.innerHTML = html;
+                profileData.classList.add('active');
+                form.style.display = 'block';
+                window.scrollTo(0, form.offsetTop - 100);
+            }
+        }
+
+        function generateProfile() {
+            const selected = document.getElementById('profileSelect').value;
+            const profile = profiles[selected];
+            const mainActivity = document.getElementById('mainActivity').value;
+            const inferences = document.getElementById('inferences').value;
+            const targeters = document.getElementById('targeters').value;
+            const whyValuable = document.getElementById('whyValuable').value;
+
+            const card = document.getElementById('profileCard');
+
+            const inferencesFormatted = inferences.split('\n').filter(i => i.trim()).map(i => `<li>${i.trim()}</li>`).join('');
+            const companiesKnowFormatted = profile.companiesKnow.map(k => `<li>${k}</li>`).join('');
+
+            card.innerHTML = `
+                <div class="profile-header">
+                    <h2>${profile.emoji} ${profile.name}, ${profile.age}</h2>
+                    <div class="subtext">Your Analysis vs. What Companies Actually Know</div>
+                </div>
+
+                <div class="comparison-section">
+                    <div class="comparison-card student">
+                        <h3>What You Inferred</h3>
+
+                        <strong class="highlight">Main Interest:</strong>
+                        <p>${mainActivity}</p>
+
+                        <strong class="highlight">Your Inferences:</strong>
+                        <ul>${inferencesFormatted}</ul>
+
+                        <strong class="highlight">Companies to Target:</strong>
+                        <p>${targeters}</p>
+
+                        <strong class="highlight">Why Valuable:</strong>
+                        <p>${whyValuable}</p>
+                    </div>
+
+                    <div class="comparison-card company">
+                        <h3>What Companies Actually Know</h3>
+                        <ul>${companiesKnowFormatted}</ul>
+                        <p class="final-note">This data is collected every day and sold to advertisers who use it to target them with precision.</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('outputSection').classList.add('active');
+            document.getElementById('analysisForm').style.display = 'none';
+            window.scrollTo(0, card.offsetTop - 100);
+        }
+
+        function resetTool() {
+            document.getElementById('profileSelect').value = '';
+            document.getElementById('analysisForm').reset();
+            document.getElementById('profileData').classList.remove('active');
+            document.getElementById('outputSection').classList.remove('active');
+            document.getElementById('analysisForm').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
